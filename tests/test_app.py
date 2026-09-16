@@ -31,6 +31,8 @@ class AppTests(unittest.TestCase):
             "https://open.neis.go.kr/portal/guide/apiGuidePage.do",
             response.text,
         )
+        self.assertIn('id="notice-input"', response.text)
+        self.assertNotIn("Notion 상세 가이드 주소", response.text)
 
     def test_environment_neis_values_take_priority(self):
         with patch.dict(

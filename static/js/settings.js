@@ -1,6 +1,7 @@
 const DAYS = ["월", "화", "수", "목", "금"];
 const form = document.querySelector("#settings-form");
 const message = document.querySelector("#form-message");
+const noticeInput = form.elements.notice;
 let state;
 let activeOverrideDate = "";
 
@@ -28,9 +29,14 @@ function fillForm() {
 
 function fillBasicSettings() {
   form.elements.classroom_name.value = state.classroom_name || "";
-  form.elements.notice.value = state.notice || "";
+  noticeInput.value = state.notice || "";
+  updateNoticeCount();
   form.elements.help_url.value = state.help_url || "";
   form.elements.timetable_source.value = state.timetable_source || "neis";
+}
+
+function updateNoticeCount() {
+  document.querySelector("#notice-count").textContent = `${noticeInput.value.length} / 240`;
 }
 
 function fillNeisSettings() {
@@ -147,6 +153,8 @@ document.querySelector("#clear-override").addEventListener("click", () => {
   delete state.date_overrides[date];
   renderOverride();
 });
+
+noticeInput.addEventListener("input", updateNoticeCount);
 
 document.querySelectorAll("[data-font-scale]").forEach((input) => {
   input.addEventListener("input", () => {

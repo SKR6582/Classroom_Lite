@@ -136,19 +136,19 @@
             <span class="section-number">6</span>
             <div>
               <h2>화면 콘텐츠</h2>
-              <p>교실 공지와 상세 설정 안내 페이지를 연결합니다.</p>
+              <p>교실 TV에 표시할 공지를 편하게 작성합니다.</p>
             </div>
           </div>
           <div class="form-grid">
             <label class="wide">교실 공지
-              <input name="notice" maxlength="240" placeholder="예: 오늘 6교시 체육관 집합">
-              <small>공지 카드에 한 문장으로 표시됩니다.</small>
-            </label>
-            <label class="wide">Notion 상세 가이드 주소
-              <input name="help_url" type="url" inputmode="url" placeholder="https://...">
-              <small>주소를 입력하면 대시보드 하단에 안내 QR이 나타납니다. 아직 문서가 없다면 비워 두세요.</small>
+              <textarea id="notice-input" name="notice" maxlength="240" rows="4" placeholder="예: 오늘 6교시 체육관 집합"></textarea>
+              <span class="field-help">
+                <small>여러 줄로 편집해도 TV 공지 카드에는 자연스럽게 이어서 표시됩니다.</small>
+                <output id="notice-count" for="notice-input">0 / 240</output>
+              </span>
             </label>
           </div>
+          <input name="help_url" type="hidden">
         </section>
 
         <section class="form-card">
@@ -211,7 +211,7 @@
           <p class="support-links">
             문제가 생기면
             <a href="https://github.com/SKR6582/Classroom_TV_Lite" target="_blank" rel="noreferrer">GitHub 프로젝트</a>와
-            설정한 Notion 상세 가이드를 확인하세요.
+            상세 설정 가이드를 확인하세요.
           </p>
         </section>
 
