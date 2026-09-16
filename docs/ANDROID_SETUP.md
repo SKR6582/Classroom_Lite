@@ -25,8 +25,8 @@ Termux를 열고 아래 명령을 한 줄씩 실행합니다.
 pkg update
 pkg upgrade
 pkg install git python termux-api
-git clone https://github.com/SKR6582/Classroom_Lite.git
-cd Classroom_Lite
+git clone https://github.com/SKR6582/Classroom_TV_Lite.git
+cd Classroom_TV_Lite
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -39,7 +39,7 @@ pip install -r requirements.txt
 다음 명령을 실행합니다.
 
 ```bash
-cd ~/Classroom_Lite
+cd ~/Classroom_TV_Lite
 source .venv/bin/activate
 termux-wake-lock
 python app.py
@@ -104,7 +104,7 @@ Smart View, 화면 공유, Cast 등 기기에서 제공하는 기능을 사용�
 서버를 `Ctrl+C`로 종료한 뒤 다음 명령을 실행합니다.
 
 ```bash
-cd ~/Classroom_Lite
+cd ~/Classroom_TV_Lite
 git pull --ff-only
 source .venv/bin/activate
 pip install -r requirements.txt

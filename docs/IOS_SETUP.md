@@ -27,7 +27,7 @@ CLASSROOM_HOST=0.0.0.0 python app.py
 Android Termux라면 먼저 다음과 같이 이동합니다.
 
 ```bash
-cd ~/Classroom_Lite
+cd ~/Classroom_TV_Lite
 source .venv/bin/activate
 CLASSROOM_HOST=0.0.0.0 python app.py
 ```

@@ -42,8 +42,8 @@ F-Droid 또는 공식 GitHub에서 Termux를 설치한 뒤 아래 명령을 실�
 ```bash
 pkg update
 pkg install git python termux-api
-git clone https://github.com/SKR6582/Classroom_Lite.git
-cd Classroom_Lite
+git clone https://github.com/SKR6582/Classroom_TV_Lite.git
+cd Classroom_TV_Lite
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -92,7 +92,7 @@ python app.py
 
 공식 Notion 상세 가이드 주소는 새 설치에 기본 입력되며, 대시보드 하단에 QR 코드로
 표시됩니다. 설정에서 주소를 비우면 QR이 숨겨집니다.
-프로젝트 문의와 최신 코드는 <https://github.com/SKR6582/Classroom_Lite>에서
+프로젝트 문의와 최신 코드는 <https://github.com/SKR6582/Classroom_TV_Lite>에서
 확인할 수 있습니다.
 
 ## 테스트
