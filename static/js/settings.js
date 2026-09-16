@@ -20,20 +20,35 @@ function localDateKey(date) {
 }
 
 function fillForm() {
+  fillBasicSettings();
+  fillNeisSettings();
+  fillHelpSettings();
+}
+
+function fillBasicSettings() {
   form.elements.classroom_name.value = state.classroom_name || "";
   form.elements.notice.value = state.notice || "";
   form.elements.help_url.value = state.help_url || "";
   form.elements.timetable_source.value = state.timetable_source || "neis";
+}
+
+function fillNeisSettings() {
   for (const key of ["office_code", "school_code", "school_name", "school_kind", "grade", "class_name"]) {
     form.elements[key].value = state.neis[key] || "";
   }
   document.querySelector("#key-status").textContent = state.neis.api_key_configured
     ? "API 키가 저장되어 있습니다. 변경할 때만 새 키를 입력하세요."
     : "NEIS에서 발급받은 API 키가 필요합니다.";
+}
+
+function fillHelpSettings() {
   const help = document.querySelector("#help-link");
   if (state.help_url) {
     help.href = state.help_url;
     help.hidden = false;
+  } else {
+    help.removeAttribute("href");
+    help.hidden = true;
   }
 }
 
@@ -149,7 +164,7 @@ document.querySelector("#school-search").addEventListener("click", async () => {
           for (const key of ["school_name", "school_kind", "office_code", "school_code"]) {
             form.elements[key].value = school[key];
           }
-          results.textContent = `${school.school_name}을(를) 선택했습니다.`;
+          results.textContent = `${school.school_name}을(를) 선택했습니다. 교육청 코드와 학교 코드가 자동 입력되었습니다.`;
         });
         return button;
       }),
@@ -209,10 +224,19 @@ document.querySelector("#import-settings").addEventListener("change", async (eve
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   storeCurrentOverride();
+  collectBasicSettings();
+  collectNeisSettings();
+  await saveSettings();
+});
+
+function collectBasicSettings() {
   state.classroom_name = form.elements.classroom_name.value;
   state.notice = form.elements.notice.value;
   state.help_url = form.elements.help_url.value;
   state.timetable_source = form.elements.timetable_source.value;
+}
+
+function collectNeisSettings() {
   state.neis = {
     api_key: form.elements.api_key.value,
     office_code: form.elements.office_code.value,
@@ -222,6 +246,9 @@ form.addEventListener("submit", async (event) => {
     grade: form.elements.grade.value,
     class_name: form.elements.class_name.value,
   };
+}
+
+async function saveSettings() {
   message.textContent = "저장 중…";
   message.className = "form-message";
   try {
@@ -238,7 +265,7 @@ form.addEventListener("submit", async (event) => {
   } catch (error) {
     message.textContent = error.message;
   }
-});
+}
 
 load().catch((error) => {
   message.textContent = `설정을 불러오지 못했습니다: ${error.message}`;

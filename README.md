@@ -21,7 +21,7 @@ F-Droid 또는 공식 GitHub에서 Termux를 설치한 뒤 아래 명령을 실�
 ```bash
 pkg update
 pkg install git python termux-api
-git clone https://github.com/USER/Classroom_Lite.git
+git clone https://github.com/SKR6582/Classroom_Lite.git
 cd Classroom_Lite
 python -m venv .venv
 source .venv/bin/activate
@@ -56,7 +56,7 @@ python app.py
 - 학교명 검색 또는 교육청 코드·표준학교코드 직접 입력
 - 학년, 반, 학급 이름
 - 교시별 시작·종료 시각
-- 월~금 기본 시간표와 한 줄 공지
+- 월~금 기본 시간표, 한 줄 공지, 선택 사항인 Notion 상세 가이드 주소
 
 실제 API 값은 저장소에 포함되지 않습니다. NEIS API 키는 서버의 설정 파일에만
 저장되며 브라우저로 다시 전송되지 않습니다.
@@ -65,12 +65,13 @@ python app.py
 `NEIS_OFFICE_CODE`를 입력하면 웹 설정값보다 우선합니다. 형식은
 `.env.example`을 참고하세요. `.env`는 Git에서 제외됩니다.
 
-설정 화면 위쪽에서 JSON 백업을 내보내거나 가져올 수 있습니다. API 키는 기본적으로
+설정 화면의 `백업과 도움말` 섹션에서 JSON 백업을 내보내거나 가져올 수 있습니다. API 키는 기본적으로
 백업에서 제외되며, 포함 옵션을 직접 선택한 경우에만 저장됩니다. API 키가 들어간
 백업 파일은 외부에 공유하지 마세요.
 
-상세 미러링 및 운영 가이드는 배포 전에 설정 화면의 Notion 도움말 링크로
-연결할 예정입니다.
+Notion 주소를 설정하면 대시보드 하단에 상세 가이드 QR 코드가 표시됩니다.
+프로젝트 문의와 최신 코드는 <https://github.com/SKR6582/Classroom_Lite>에서
+확인할 수 있습니다.
 
 ## 테스트
 

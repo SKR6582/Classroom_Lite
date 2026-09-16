@@ -74,6 +74,38 @@ class AppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()["entries"][0]["subject"], "국어")
 
+    def test_notion_qr_is_disabled_without_help_url(self):
+        response = self.client.get("/api/notion-qr?url=https://attacker.example")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.mimetype, "application/json")
+
+    def test_notion_qr_returns_cached_svg_without_secrets(self):
+        payload = {**DEFAULT_SETTINGS, "classroom_name": "2-1"}
+        payload["help_url"] = "https://example.notion.site/classroom-guide"
+        payload["neis"] = {
+            **DEFAULT_SETTINGS["neis"],
+            "api_key": "never-expose-this-key",
+            "office_code": "N10",
+            "school_code": "123",
+        }
+        self.client.post("/api/settings", json=payload)
+
+        response = self.client.get(
+            "/api/notion-qr?url=https://attacker.example"
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.mimetype, "image/svg+xml")
+        self.assertIn(b"<svg", response.data)
+        self.assertNotIn(b"never-expose-this-key", response.data)
+        self.assertNotIn(b"attacker.example", response.data)
+        self.assertIn("private", response.headers["Cache-Control"])
+
+        cached = self.client.get(
+            "/api/notion-qr",
+            headers={"If-None-Match": response.headers["ETag"]},
+        )
+        self.assertEqual(cached.status_code, 304)
+
 
 if __name__ == "__main__":
     unittest.main()

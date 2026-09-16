@@ -47,6 +47,21 @@ class SettingsStoreTests(unittest.TestCase):
             with self.assertRaises(SettingsError):
                 SettingsStore(Path(directory)).save(settings)
 
+    def test_accepts_http_help_url(self):
+        settings = {**DEFAULT_SETTINGS, "help_url": "https://example.notion.site/guide"}
+        with tempfile.TemporaryDirectory() as directory:
+            store = SettingsStore(Path(directory))
+            store.save(settings)
+            self.assertEqual(
+                store.load()["help_url"], "https://example.notion.site/guide"
+            )
+
+    def test_rejects_invalid_help_url(self):
+        settings = {**DEFAULT_SETTINGS, "help_url": "javascript:alert(1)"}
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(SettingsError, "http"):
+                SettingsStore(Path(directory)).save(settings)
+
 
 if __name__ == "__main__":
     unittest.main()

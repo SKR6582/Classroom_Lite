@@ -1,12 +1,15 @@
 from __future__ import annotations
 
+import hashlib
 import os
 from copy import deepcopy
 from datetime import date
+from io import BytesIO
 from pathlib import Path
 from typing import Any
 
-from flask import Flask, jsonify, redirect, render_template, request, url_for
+import segno
+from flask import Flask, Response, jsonify, redirect, render_template, request, url_for
 
 from classroom_lite.meals import get_meal
 from classroom_lite.neis import NeisError, search_schools
@@ -62,11 +65,14 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     def security_headers(response):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "same-origin"
-        response.headers["Cache-Control"] = (
-            "no-store"
-            if request.path.startswith("/api/")
-            else "no-cache, max-age=0"
-        )
+        if request.path == "/api/notion-qr" and response.status_code < 400:
+            response.headers["Cache-Control"] = "private, max-age=86400"
+        else:
+            response.headers["Cache-Control"] = (
+                "no-store"
+                if request.path.startswith("/api/")
+                else "no-cache, max-age=0"
+            )
         return response
 
     @app.get("/")
@@ -149,6 +155,26 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 "timetable": timetable,
             }
         )
+
+    @app.get("/api/notion-qr")
+    def notion_qr():
+        help_url = store.load().get("help_url", "")
+        if not help_url:
+            return jsonify({"error": "Notion 상세 가이드 주소가 설정되지 않았습니다."}), 404
+
+        output = BytesIO()
+        segno.make(help_url, error="m").save(
+            output,
+            kind="svg",
+            scale=4,
+            border=2,
+            dark="#0d1420",
+            light="#e8eef7",
+            xmldecl=False,
+        )
+        response = Response(output.getvalue(), mimetype="image/svg+xml")
+        response.set_etag(hashlib.sha256(help_url.encode("utf-8")).hexdigest())
+        return response.make_conditional(request)
 
     @app.get("/api/meals")
     def meals_data():

@@ -12,7 +12,6 @@
   </head>
   <body class="dashboard-page">
     <main class="dashboard" aria-live="polite">
-      <a class="settings-link" href="/settings" aria-label="설정">⚙</a>
       <section class="dashboard-grid">
         <div class="left-column">
           <article class="panel clock-panel">
@@ -60,6 +59,19 @@
           <ol id="timetable-list" class="timetable-list"></ol>
         </article>
       </section>
+      <footer class="dashboard-footer">
+        <a class="github-link" href="https://github.com/SKR6582" target="_blank" rel="noreferrer">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 .7A11.5 11.5 0 0 0 8.4 23c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.6.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0C15.8 4.7 16.8 5 16.8 5c.6 1.5.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.8 5.4-5.5 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .7Z"/>
+          </svg>
+          <span>@SKR6582</span>
+        </a>
+        <a id="notion-guide" class="notion-guide" href="#" target="_blank" rel="noreferrer" hidden>
+          <img id="notion-qr" alt="Notion 상세 설정 가이드 QR 코드" width="48" height="48">
+          <span>상세 설정<br>가이드</span>
+        </a>
+        <a class="settings-link" href="/settings" aria-label="설정" title="설정">⚙</a>
+      </footer>
     </main>
   </body>
 </html>

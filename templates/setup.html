@@ -15,38 +15,49 @@
         <div>
           <p class="eyebrow">Classroom TV Lite</p>
           <h1>{{ "처음 사용할 정보를 입력하세요" if mode == "setup" else "대시보드 설정" }}</h1>
+          <p class="settings-intro">
+            위에서부터 차례대로 입력하면 됩니다. 저장한 내용은 이 기기에만 보관됩니다.
+          </p>
         </div>
         <div class="header-actions">
           <a id="help-link" class="secondary-button" href="#" target="_blank" rel="noreferrer" hidden>설정 도움말</a>
           {% if mode == "settings" %}<a class="secondary-button" href="/">대시보드</a>{% endif %}
         </div>
       </header>
-      <section class="settings-tools" aria-label="설정 백업">
-        <label class="check-label">
-          <input id="include-api-key" type="checkbox">
-          백업 파일에 API 키 포함
-        </label>
-        <button id="export-settings" class="secondary-button" type="button">설정 내보내기</button>
-        <label class="secondary-button file-button">
-          설정 가져오기
-          <input id="import-settings" type="file" accept="application/json,.json" hidden>
-        </label>
-      </section>
 
       <form id="settings-form">
         <section class="form-card">
-          <h2>1. 학급과 NEIS</h2>
+          <div class="section-heading">
+            <span class="section-number">1</span>
+            <div>
+              <h2>기본 정보</h2>
+              <p>TV 화면에 표시할 학급 이름을 입력합니다.</p>
+            </div>
+          </div>
           <div class="form-grid">
             <label>학급 이름<input name="classroom_name" required placeholder="예: 2학년 1반"></label>
+          </div>
+        </section>
+
+        <section class="form-card">
+          <div class="section-heading">
+            <span class="section-number">2</span>
+            <div>
+              <h2>학교와 NEIS 연결</h2>
+              <p>급식과 시간표를 자동으로 가져오기 위한 정보입니다. API 키 입력 후 학교명으로 검색하세요.</p>
+            </div>
+          </div>
+          <div class="form-grid">
             <label class="wide">NEIS API 키
               <input name="api_key" type="password" autocomplete="off" placeholder="저장된 키는 다시 표시되지 않습니다">
-              <small id="key-status"></small>
+              <small id="key-status">입력한 키는 이 기기 밖으로 공개되지 않습니다.</small>
             </label>
             <label class="wide">학교명 검색
               <span class="inline-field">
                 <input id="school-query" placeholder="학교 이름을 입력하세요">
                 <button id="school-search" type="button">검색</button>
               </span>
+              <small>검색 결과가 없으면 아래 코드를 직접 입력할 수 있습니다.</small>
             </label>
           </div>
           <div id="school-results" class="school-results"></div>
@@ -66,33 +77,88 @@
         </section>
 
         <section class="form-card">
-          <div class="section-title-row">
-            <h2>2. 교시 시간</h2>
+          <div class="section-heading section-heading-with-control">
+            <span class="section-number">3</span>
+            <div>
+              <h2>일과 시간</h2>
+              <p>각 교시의 시작과 종료 시각을 학교 일과표에 맞춰 입력합니다.</p>
+            </div>
             <select name="timetable_source">
-              <option value="neis">NEIS 자동 + 수동 fallback</option>
-              <option value="manual">수동 시간표 고정</option>
+              <option value="neis">NEIS 자동, 실패하면 기본 시간표</option>
+              <option value="manual">기본 시간표만 사용</option>
             </select>
           </div>
           <div id="slots-editor" class="slots-editor"></div>
         </section>
 
         <section class="form-card">
-          <h2>3. 주간 기본 시간표</h2>
-          <p class="form-help">NEIS 조회가 실패하거나 수동 고정 모드일 때 표시됩니다.</p>
+          <div class="section-heading">
+            <span class="section-number">4</span>
+            <div>
+              <h2>월요일부터 금요일 기본 시간표</h2>
+              <p>인터넷 연결이나 NEIS 조회에 문제가 생겼을 때 대신 표시할 안전한 기본 시간표입니다.</p>
+            </div>
+          </div>
           <div id="week-editor" class="week-editor"></div>
         </section>
 
         <section class="form-card">
-          <h2>4. 오늘 시간표 보정</h2>
+          <div class="section-heading">
+            <span class="section-number">5</span>
+            <div>
+              <h2>특정 날짜 시간표 바꾸기</h2>
+              <p>시험, 행사, 단축수업처럼 오늘만 다른 과목을 표시할 때 사용합니다. 비워 두면 자동 시간표를 사용합니다.</p>
+            </div>
+          </div>
           <label>날짜<input id="override-date" type="date"></label>
           <div id="override-editor" class="override-editor"></div>
           <button id="clear-override" class="secondary-button" type="button">이 날짜 보정 삭제</button>
         </section>
 
         <section class="form-card">
-          <h2>5. 공지</h2>
-          <label>하단 한 줄 공지<input name="notice" maxlength="240" placeholder="예: 오늘 6교시 체육관 집합"></label>
-          <input name="help_url" type="hidden">
+          <div class="section-heading">
+            <span class="section-number">6</span>
+            <div>
+              <h2>화면 콘텐츠</h2>
+              <p>교실 공지와 상세 설정 안내 페이지를 연결합니다.</p>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label class="wide">교실 공지
+              <input name="notice" maxlength="240" placeholder="예: 오늘 6교시 체육관 집합">
+              <small>공지 카드에 한 문장으로 표시됩니다.</small>
+            </label>
+            <label class="wide">Notion 상세 가이드 주소
+              <input name="help_url" type="url" inputmode="url" placeholder="https://...">
+              <small>주소를 입력하면 대시보드 하단에 안내 QR이 나타납니다. 아직 문서가 없다면 비워 두세요.</small>
+            </label>
+          </div>
+        </section>
+
+        <section class="form-card">
+          <div class="section-heading">
+            <span class="section-number">7</span>
+            <div>
+              <h2>백업과 도움말</h2>
+              <p>기기를 바꾸기 전에 설정 파일을 내려받아 보관하세요.</p>
+            </div>
+          </div>
+          <div class="settings-tools" aria-label="설정 백업">
+            <label class="check-label">
+              <input id="include-api-key" type="checkbox">
+              백업 파일에 API 키 포함
+            </label>
+            <button id="export-settings" class="secondary-button" type="button">설정 내보내기</button>
+            <label class="secondary-button file-button">
+              설정 가져오기
+              <input id="import-settings" type="file" accept="application/json,.json" hidden>
+            </label>
+          </div>
+          <p class="support-links">
+            문제가 생기면
+            <a href="https://github.com/SKR6582/Classroom_Lite" target="_blank" rel="noreferrer">GitHub 프로젝트</a>와
+            설정한 Notion 상세 가이드를 확인하세요.
+          </p>
         </section>
 
         <p id="form-message" class="form-message" role="status"></p>

@@ -6,6 +6,7 @@ import tempfile
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 
 DEFAULT_SLOTS = [
@@ -59,6 +60,16 @@ def _valid_time(value: Any) -> bool:
 
 def _clean_text(value: Any, limit: int) -> str:
     return str(value or "").strip()[:limit]
+
+
+def _clean_optional_url(value: Any) -> str:
+    cleaned = _clean_text(value, 500)
+    if not cleaned:
+        return ""
+    parsed = urlparse(cleaned)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        raise SettingsError("Notion 주소는 http:// 또는 https://로 시작해야 합니다.")
+    return cleaned
 
 
 def public_settings(settings: dict[str, Any]) -> dict[str, Any]:
@@ -153,7 +164,7 @@ def validate_settings(
         "version": 1,
         "classroom_name": _clean_text(payload.get("classroom_name"), 60),
         "notice": _clean_text(payload.get("notice"), 240),
-        "help_url": _clean_text(payload.get("help_url"), 500),
+        "help_url": _clean_optional_url(payload.get("help_url")),
         "timetable_source": source,
         "neis": neis,
         "slots": slots,

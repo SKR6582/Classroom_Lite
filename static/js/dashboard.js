@@ -21,6 +21,8 @@ const elements = {
   mealMessage: document.querySelector("#meal-message"),
   notice: document.querySelector("#notice-text"),
   wakeStatus: document.querySelector("#wake-status"),
+  notionGuide: document.querySelector("#notion-guide"),
+  notionQr: document.querySelector("#notion-qr"),
 };
 
 let entries = [];
@@ -59,6 +61,22 @@ function renderTimetable(timetable) {
   elements.timetable.style.gridTemplateRows = `repeat(${Math.max(entries.length, 1)}, 1fr)`;
 }
 
+function renderFooter(helpUrl) {
+  if (!helpUrl) {
+    elements.notionGuide.hidden = true;
+    elements.notionGuide.removeAttribute("href");
+    elements.notionQr.removeAttribute("src");
+    return;
+  }
+  let version = 0;
+  for (const character of helpUrl) {
+    version = ((version << 5) - version + character.charCodeAt(0)) | 0;
+  }
+  elements.notionGuide.href = helpUrl;
+  elements.notionQr.src = `/api/notion-qr?v=${Math.abs(version)}`;
+  elements.notionGuide.hidden = false;
+}
+
 async function loadDashboard(refresh = false) {
   const suffix = `?date=${loadedDate}${refresh ? "&refresh=1" : ""}`;
   const response = await fetch(`/api/dashboard${suffix}`, { cache: "no-store" });
@@ -71,6 +89,7 @@ async function loadDashboard(refresh = false) {
   elements.classroom.textContent = data.classroom_name || "교실";
   elements.notice.textContent = data.notice || "등록된 공지가 없습니다.";
   renderTimetable(data.timetable);
+  renderFooter(data.help_url);
 }
 
 async function loadMeal(refresh = false) {
