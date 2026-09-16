@@ -52,7 +52,8 @@ http://192.168.0.25:53111
 2. NEIS API 키와 학교 정보
 3. 학년·반과 교시 시간
 4. 기본 시간표와 날짜별 변경
-5. 공지와 선택 사항인 Notion 상세 가이드 주소
+5. 공지와 기본 입력된
+   [Notion 상세 가이드 주소](https://app.notion.com/p/Classroom-TV-Lite-3dd54b03965e8047b272df3015806757?source=copy_link)
 
 설정을 한 번 저장하면 iPhone에서는 서버의 IP 주소로 접속만 해도 동일한 대시보드가
 보입니다.

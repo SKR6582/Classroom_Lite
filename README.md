@@ -9,6 +9,7 @@ Android 공기계에서 Termux로 직접 실행하고, 브라우저 화면을 �
   HDMI·무선 미러링, 장시간 운영과 업데이트
 - [iPhone·iPad 접속 및 TV 연결 가이드](docs/IOS_SETUP.md): 별도 서버 접속,
   홈 화면 추가, AirPlay·HDMI 연결과 iOS 제약
+- [Notion 상세 설정·운영 가이드](https://app.notion.com/p/Classroom-TV-Lite-3dd54b03965e8047b272df3015806757?source=copy_link)
 
 iOS와 iPadOS에서는 서버를 직접 실행하지 않고 Android, Mac, PC 또는 Raspberry Pi에서
 실행 중인 서버에 접속합니다.
@@ -79,7 +80,8 @@ python app.py
 백업에서 제외되며, 포함 옵션을 직접 선택한 경우에만 저장됩니다. API 키가 들어간
 백업 파일은 외부에 공유하지 마세요.
 
-Notion 주소를 설정하면 대시보드 하단에 상세 가이드 QR 코드가 표시됩니다.
+공식 Notion 상세 가이드 주소는 새 설치에 기본 입력되며, 대시보드 하단에 QR 코드로
+표시됩니다. 설정에서 주소를 비우면 QR이 숨겨집니다.
 프로젝트 문의와 최신 코드는 <https://github.com/SKR6582/Classroom_Lite>에서
 확인할 수 있습니다.
 

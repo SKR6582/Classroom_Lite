@@ -22,12 +22,16 @@ DEFAULT_SLOTS = [
     ]
 ]
 WEEKDAYS = ("월", "화", "수", "목", "금")
+DEFAULT_HELP_URL = (
+    "https://app.notion.com/p/"
+    "Classroom-TV-Lite-3dd54b03965e8047b272df3015806757?source=copy_link"
+)
 
 DEFAULT_SETTINGS: dict[str, Any] = {
     "version": 1,
     "classroom_name": "",
     "notice": "",
-    "help_url": "",
+    "help_url": DEFAULT_HELP_URL,
     "timetable_source": "neis",
     "neis": {
         "api_key": "",

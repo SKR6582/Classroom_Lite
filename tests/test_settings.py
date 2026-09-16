@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 
 from classroom_lite.settings_store import (
+    DEFAULT_HELP_URL,
     DEFAULT_SETTINGS,
     SettingsError,
     SettingsStore,
@@ -11,6 +12,12 @@ from classroom_lite.settings_store import (
 
 
 class SettingsStoreTests(unittest.TestCase):
+    def test_new_install_uses_official_help_url(self):
+        with tempfile.TemporaryDirectory() as directory:
+            self.assertEqual(
+                SettingsStore(directory).load()["help_url"], DEFAULT_HELP_URL
+            )
+
     def test_save_preserves_existing_secret_when_blank(self):
         with tempfile.TemporaryDirectory() as directory:
             store = SettingsStore(directory)

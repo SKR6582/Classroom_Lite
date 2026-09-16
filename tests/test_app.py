@@ -75,6 +75,8 @@ class AppTests(unittest.TestCase):
         self.assertEqual(response.get_json()["entries"][0]["subject"], "국어")
 
     def test_notion_qr_is_disabled_without_help_url(self):
+        payload = {**DEFAULT_SETTINGS, "help_url": ""}
+        self.client.post("/api/settings", json=payload)
         response = self.client.get("/api/notion-qr?url=https://attacker.example")
         self.assertEqual(response.status_code, 404)
         self.assertEqual(response.mimetype, "application/json")
