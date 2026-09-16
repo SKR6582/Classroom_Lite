@@ -5,8 +5,8 @@
   "scope": "/",
   "display": "fullscreen",
   "orientation": "landscape",
-  "background_color": "#07111f",
-  "theme_color": "#07111f",
+  "background_color": "#0d1420",
+  "theme_color": "#0d1420",
   "icons": [
     {
       "src": "/static/icon.svg",
