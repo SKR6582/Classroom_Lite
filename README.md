@@ -3,6 +3,16 @@
 Android 공기계에서 Termux로 직접 실행하고, 브라우저 화면을 교실 TV에
 16:9로 미러링하는 초경량 대시보드입니다.
 
+## 화면 미리보기
+
+### 16:9 교실 TV 대시보드
+
+![Classroom TV Lite 대시보드](docs/images/dashboard.png)
+
+### 비개발자용 설정 화면
+
+![Classroom TV Lite 설정 화면](docs/images/settings.png)
+
 ## 기기별 설치 가이드
 
 - [Android 설치 및 운영 가이드](docs/ANDROID_SETUP.md): Termux 설치, 첫 실행,
