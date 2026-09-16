@@ -257,6 +257,16 @@ button, .primary-button, .secondary-button {
   background: var(--text-primary); border: 3px solid var(--surface-2); border-radius: 50%;
 }
 .font-scale-row output { color: var(--text-primary); text-align: right; font-variant-numeric: tabular-nums; font-weight: 800; }
+.update-panel {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px; padding: 16px;
+  background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 12px;
+}
+.update-panel strong { color: var(--text-primary); }
+.update-panel p { margin: 6px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+.update-panel small { color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
+.update-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.update-actions button { justify-content: center; white-space: nowrap; }
 .override-editor { margin: 12px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .form-message { min-height: 24px; color: var(--text-secondary); }
 .form-message.success { color: var(--text-primary); }
@@ -284,6 +294,9 @@ button, .primary-button, .secondary-button {
   .font-scale-row > span { grid-column: 1; grid-row: 1; }
   .font-scale-row output { grid-column: 2; grid-row: 1; }
   .font-scale-row input[type="range"] { grid-column: 1 / -1; grid-row: 2; }
+  .update-panel { align-items: stretch; flex-direction: column; }
+  .update-actions { justify-content: stretch; }
+  .update-actions button { flex: 1; }
   .section-heading-with-control { grid-template-columns: 34px minmax(0, 1fr); }
   .section-heading-with-control select { grid-column: 1 / -1; }
   .override-editor { grid-template-columns: 1fr 1fr; }

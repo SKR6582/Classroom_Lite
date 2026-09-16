@@ -6,6 +6,32 @@ from app import _with_env_neis, create_app
 from classroom_lite.settings_store import DEFAULT_SETTINGS
 
 
+class FakeUpdater:
+    def check(self, fetch=True):
+        return {
+            "current": "aaaaaaa",
+            "latest": "bbbbbbb",
+            "channel": "stable",
+            "ahead": 0,
+            "behind": 1,
+            "dirty": False,
+            "available": True,
+            "can_update": True,
+            "message": "새 업데이트 1개를 설치할 수 있습니다.",
+        }
+
+    def apply(self):
+        return {
+            **self.check(),
+            "current": "bbbbbbb",
+            "behind": 0,
+            "available": False,
+            "can_update": False,
+            "updated": True,
+            "message": "업데이트를 설치했습니다.",
+        }
+
+
 class AppTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -46,6 +72,42 @@ class AppTests(unittest.TestCase):
             result = _with_env_neis(DEFAULT_SETTINGS)
         self.assertEqual(result["neis"]["api_key"], "env-key")
         self.assertEqual(result["neis"]["school_code"], "env-school")
+
+    def test_update_api_is_restricted_to_loopback(self):
+        response = self.client.get(
+            "/api/update", environ_base={"REMOTE_ADDR": "192.168.0.20"}
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("localhost", response.get_json()["error"])
+
+    def test_update_api_checks_and_applies_stable_release(self):
+        app = create_app(
+            {
+                "TESTING": True,
+                "DATA_DIR": self.temp.name,
+                "UPDATER": FakeUpdater(),
+            }
+        )
+        client = app.test_client()
+        checked = client.get("/api/update")
+        self.assertEqual(checked.status_code, 200)
+        self.assertEqual(checked.get_json()["channel"], "stable")
+
+        applied = client.post("/api/update", json={})
+        self.assertEqual(applied.status_code, 200)
+        self.assertTrue(applied.get_json()["updated"])
+        self.assertFalse(applied.get_json()["restart_scheduled"])
+
+    def test_update_apply_requires_json_request(self):
+        app = create_app(
+            {
+                "TESTING": True,
+                "DATA_DIR": self.temp.name,
+                "UPDATER": FakeUpdater(),
+            }
+        )
+        response = app.test_client().post("/api/update")
+        self.assertEqual(response.status_code, 415)
 
     def test_settings_api_masks_key(self):
         payload = {**DEFAULT_SETTINGS, "classroom_name": "2-1"}

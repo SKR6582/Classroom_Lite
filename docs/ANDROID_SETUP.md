@@ -25,7 +25,7 @@ Termux를 열고 아래 명령을 한 줄씩 실행합니다.
 pkg update
 pkg upgrade
 pkg install git python termux-api
-git clone https://github.com/SKR6582/Classroom_TV_Lite.git
+git clone --branch stable --single-branch https://github.com/SKR6582/Classroom_TV_Lite.git
 cd Classroom_TV_Lite
 python -m venv .venv
 source .venv/bin/activate
@@ -102,11 +102,19 @@ Smart View, 화면 공유, Cast 등 기기에서 제공하는 기능을 사용�
 ## 7. 업데이트와 백업
 
 업데이트 전 설정 화면의 `백업과 도움말`에서 설정 파일을 내보내는 것을 권장합니다.
-서버를 `Ctrl+C`로 종료한 뒤 다음 명령을 실행합니다.
+
+1. 서버 기기의 브라우저에서 <http://localhost:53111/settings>를 엽니다.
+2. `앱 업데이트`에서 `업데이트 확인`을 누릅니다.
+3. 새 버전이 있으면 `설치하고 서버 재시작`을 누릅니다.
+4. 설치가 끝나면 새 서버가 열리고 설정 화면이 자동으로 다시 로드됩니다.
+
+수정된 프로젝트 파일이나 별도 로컬 커밋이 있으면 안전을 위해 자동 업데이트가
+중단됩니다. 자동 업데이트를 사용할 수 없을 때만 서버를 `Ctrl+C`로 종료하고 다음
+명령으로 stable 브랜치를 직접 갱신합니다.
 
 ```bash
 cd ~/Classroom_TV_Lite
-git pull --ff-only
+git pull --ff-only origin stable
 source .venv/bin/activate
 pip install -r requirements.txt
 python app.py

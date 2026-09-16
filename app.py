@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import hashlib
+import ipaddress
 import os
+import sys
+import threading
 from copy import deepcopy
 from datetime import date
 from io import BytesIO
@@ -19,6 +22,7 @@ from classroom_lite.settings_store import (
     public_settings,
 )
 from classroom_lite.timetable import get_timetable
+from classroom_lite.updater import AppUpdater, UpdateError
 
 
 def _load_local_env() -> None:
@@ -49,6 +53,17 @@ def _with_env_neis(settings: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
+def _is_loopback(address: str | None) -> bool:
+    try:
+        return ipaddress.ip_address(address or "").is_loopback
+    except ValueError:
+        return False
+
+
+def _restart_process() -> None:
+    os.execv(sys.executable, [sys.executable, str(Path(__file__).resolve())])
+
+
 _load_local_env()
 
 
@@ -60,6 +75,8 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
     store = SettingsStore(app.config.get("DATA_DIR"))
     cache_dir = store.data_dir / "cache"
     app.extensions["settings_store"] = store
+    updater = app.config.get("UPDATER") or AppUpdater()
+    app.extensions["app_updater"] = updater
 
     @app.after_request
     def security_headers(response):
@@ -102,6 +119,46 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
             )
         except SettingsError as exc:
             return jsonify({"ok": False, "error": str(exc)}), 400
+
+    def update_request_error():
+        if not _is_loopback(request.remote_addr):
+            return jsonify(
+                {"error": "업데이트는 서버 기기의 localhost에서만 실행할 수 있습니다."}
+            ), 403
+        fetch_site = request.headers.get("Sec-Fetch-Site")
+        if fetch_site not in {None, "none", "same-origin"}:
+            return jsonify({"error": "다른 사이트에서는 업데이트할 수 없습니다."}), 403
+        return None
+
+    @app.get("/api/update")
+    def update_check():
+        denied = update_request_error()
+        if denied:
+            return denied
+        try:
+            return jsonify(updater.check(fetch=True))
+        except UpdateError as exc:
+            return jsonify({"error": str(exc)}), 409
+
+    @app.post("/api/update")
+    def update_apply():
+        denied = update_request_error()
+        if denied:
+            return denied
+        if not request.is_json:
+            return jsonify({"error": "올바른 업데이트 요청이 아닙니다."}), 415
+        try:
+            result = updater.apply()
+        except UpdateError as exc:
+            return jsonify({"error": str(exc)}), 409
+
+        restart_scheduled = bool(result["updated"] and not app.config.get("TESTING"))
+        if restart_scheduled:
+            restart_callback = app.config.get("RESTART_CALLBACK", _restart_process)
+            timer = threading.Timer(2.0, restart_callback)
+            timer.daemon = True
+            timer.start()
+        return jsonify({**result, "restart_scheduled": restart_scheduled})
 
     @app.get("/api/settings/export")
     def settings_export():

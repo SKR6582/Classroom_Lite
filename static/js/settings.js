@@ -2,6 +2,11 @@ const DAYS = ["월", "화", "수", "목", "금"];
 const form = document.querySelector("#settings-form");
 const message = document.querySelector("#form-message");
 const noticeInput = form.elements.notice;
+const checkUpdateButton = document.querySelector("#check-update");
+const applyUpdateButton = document.querySelector("#apply-update");
+const updateTitle = document.querySelector("#update-title");
+const updateStatus = document.querySelector("#update-status");
+const updateVersions = document.querySelector("#update-versions");
 let state;
 let activeOverrideDate = "";
 
@@ -155,6 +160,81 @@ document.querySelector("#clear-override").addEventListener("click", () => {
 });
 
 noticeInput.addEventListener("input", updateNoticeCount);
+
+function setUpdateBusy(busy) {
+  checkUpdateButton.disabled = busy;
+  applyUpdateButton.disabled = busy;
+}
+
+function showUpdateResult(data) {
+  updateTitle.textContent = data.available ? "새 업데이트가 있습니다." : "현재 상태";
+  updateStatus.textContent = data.message;
+  updateVersions.textContent = `현재 ${data.current} · stable ${data.latest}`;
+  updateVersions.hidden = false;
+  applyUpdateButton.hidden = !data.can_update;
+}
+
+checkUpdateButton.addEventListener("click", async () => {
+  setUpdateBusy(true);
+  updateTitle.textContent = "업데이트 확인 중…";
+  updateStatus.textContent = "GitHub의 stable 버전을 확인하고 있습니다.";
+  applyUpdateButton.hidden = true;
+  try {
+    const response = await fetch("/api/update", { cache: "no-store" });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "업데이트를 확인하지 못했습니다.");
+    showUpdateResult(data);
+  } catch (error) {
+    updateTitle.textContent = "업데이트 확인 실패";
+    updateStatus.textContent = error.message;
+  } finally {
+    setUpdateBusy(false);
+  }
+});
+
+applyUpdateButton.addEventListener("click", async () => {
+  setUpdateBusy(true);
+  updateTitle.textContent = "업데이트 설치 중…";
+  updateStatus.textContent = "앱과 필요한 패키지를 설치하고 있습니다. 이 화면을 닫지 마세요.";
+  try {
+    const response = await fetch("/api/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{}",
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "업데이트를 설치하지 못했습니다.");
+    showUpdateResult(data);
+    if (data.restart_scheduled) {
+      updateTitle.textContent = "서버 재시작 중…";
+      updateStatus.textContent = "잠시 후 새 버전으로 화면을 다시 엽니다.";
+      await waitForRestart();
+    }
+  } catch (error) {
+    updateTitle.textContent = "업데이트 실패";
+    updateStatus.textContent = error.message;
+    setUpdateBusy(false);
+  }
+});
+
+async function waitForRestart() {
+  await new Promise((resolve) => setTimeout(resolve, 3500));
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    try {
+      const response = await fetch("/health", { cache: "no-store" });
+      if (response.ok) {
+        location.reload();
+        return;
+      }
+    } catch {
+      // 서버가 다시 열릴 때까지 기다립니다.
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  updateTitle.textContent = "서버를 직접 다시 열어 주세요.";
+  updateStatus.textContent = "Termux에서 python app.py를 다시 실행하면 업데이트가 완료됩니다.";
+  setUpdateBusy(false);
+}
 
 document.querySelectorAll("[data-font-scale]").forEach((input) => {
   input.addEventListener("input", () => {

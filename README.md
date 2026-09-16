@@ -19,6 +19,7 @@ Android 공기계에서 Termux로 직접 실행하고, 브라우저 화면을 �
   HDMI·무선 미러링, 장시간 운영과 업데이트
 - [iPhone·iPad 접속 및 TV 연결 가이드](docs/IOS_SETUP.md): 별도 서버 접속,
   홈 화면 추가, AirPlay·HDMI 연결과 iOS 제약
+- [stable 브랜치 배포 가이드](docs/RELEASES.md): 개발자용 업데이트 배포 절차
 - [Notion 상세 설정·운영 가이드](https://app.notion.com/p/Classroom-TV-Lite-3dd54b03965e8047b272df3015806757?source=copy_link)
 
 iOS와 iPadOS에서는 서버를 직접 실행하지 않고 Android, Mac, PC 또는 Raspberry Pi에서
@@ -33,6 +34,7 @@ iOS와 iPadOS에서는 서버를 직접 실행하지 않고 Android, Mac, PC 또
 - 시계·현재 일과·공지·급식·시간표별 글씨 크기 조절
 - Screen Wake Lock 자동 재요청
 - 웹 초기 설정 및 설정 변경
+- 설정 페이지에서 stable 버전 확인·설치·자동 재시작
 
 설정과 API 캐시는 저장소 밖의 `~/.classroom-tv-lite/`에 저장됩니다.
 
@@ -43,7 +45,7 @@ F-Droid 또는 공식 GitHub에서 Termux를 설치한 뒤 아래 명령을 실�
 ```bash
 pkg update
 pkg install git python termux-api
-git clone https://github.com/SKR6582/Classroom_TV_Lite.git
+git clone --branch stable --single-branch https://github.com/SKR6582/Classroom_TV_Lite.git
 cd Classroom_TV_Lite
 python -m venv .venv
 source .venv/bin/activate
@@ -109,3 +111,4 @@ node --test tests/test_time.mjs
 - `CLASSROOM_DATA_DIR`: 설정·캐시 저장 위치 변경
 - `CLASSROOM_HOST`: 서버 바인딩 주소(기본 `127.0.0.1`)
 - `CLASSROOM_PORT`: 포트(기본 `53111`)
+- `CLASSROOM_UPDATE_BRANCH`: 업데이트 배포 브랜치(기본 `stable`)
