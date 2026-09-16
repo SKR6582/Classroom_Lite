@@ -155,6 +155,44 @@
           <div class="section-heading">
             <span class="section-number">7</span>
             <div>
+              <h2>화면 글씨 크기</h2>
+              <p>TV까지의 거리와 화면 크기에 맞춰 카드별 글씨를 따로 조정합니다.</p>
+            </div>
+          </div>
+          <div class="font-scale-editor">
+            <label class="font-scale-row">
+              <span><strong>시계</strong><small>현재 시각·날짜·학급 이름</small></span>
+              <input type="range" min="75" max="150" step="5" value="100" data-font-scale="clock">
+              <output data-font-scale-output="clock">100%</output>
+            </label>
+            <label class="font-scale-row">
+              <span><strong>현재 일과</strong><small>교시 이름·남은 시간</small></span>
+              <input type="range" min="75" max="150" step="5" value="100" data-font-scale="status">
+              <output data-font-scale-output="status">100%</output>
+            </label>
+            <label class="font-scale-row">
+              <span><strong>공지</strong><small>공지 제목과 내용</small></span>
+              <input type="range" min="75" max="150" step="5" value="100" data-font-scale="notice">
+              <output data-font-scale-output="notice">100%</output>
+            </label>
+            <label class="font-scale-row">
+              <span><strong>급식</strong><small>급식 카드 제목과 메뉴</small></span>
+              <input type="range" min="75" max="150" step="5" value="100" data-font-scale="meal">
+              <output data-font-scale-output="meal">100%</output>
+            </label>
+            <label class="font-scale-row">
+              <span><strong>시간표</strong><small>교시·과목·시간</small></span>
+              <input type="range" min="75" max="150" step="5" value="100" data-font-scale="timetable">
+              <output data-font-scale-output="timetable">100%</output>
+            </label>
+          </div>
+          <button id="reset-font-scales" class="secondary-button" type="button">글씨 크기 기본값으로</button>
+        </section>
+
+        <section class="form-card">
+          <div class="section-heading">
+            <span class="section-number">8</span>
+            <div>
               <h2>백업과 도움말</h2>
               <p>기기를 바꾸기 전에 설정 파일을 내려받아 보관하세요.</p>
             </div>

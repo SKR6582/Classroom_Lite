@@ -69,6 +69,32 @@ class SettingsStoreTests(unittest.TestCase):
             with self.assertRaisesRegex(SettingsError, "http"):
                 SettingsStore(Path(directory)).save(settings)
 
+    def test_missing_font_scales_use_100_percent_for_older_settings(self):
+        settings = {
+            key: value for key, value in DEFAULT_SETTINGS.items() if key != "display"
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            saved = SettingsStore(Path(directory)).save(settings)
+        self.assertEqual(
+            saved["display"]["font_scales"],
+            {
+                "clock": 100,
+                "status": 100,
+                "notice": 100,
+                "meal": 100,
+                "timetable": 100,
+            },
+        )
+
+    def test_rejects_font_scale_outside_allowed_range(self):
+        settings = {
+            **DEFAULT_SETTINGS,
+            "display": {"font_scales": {"clock": 151}},
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(SettingsError, "75%"):
+                SettingsStore(Path(directory)).save(settings)
+
 
 if __name__ == "__main__":
     unittest.main()

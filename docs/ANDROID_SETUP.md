@@ -63,6 +63,7 @@ python app.py
 5. 필요한 경우 날짜별 시간표 변경
 6. 교실 공지와 기본 입력된
    [Notion 상세 가이드 주소](https://app.notion.com/p/Classroom-TV-Lite-3dd54b03965e8047b272df3015806757?source=copy_link)
+7. TV 거리와 크기에 맞춘 카드별 글씨 크기
 
 학교명 검색이 안 되면 교육청 코드와 표준학교코드를 직접 입력할 수 있습니다.
 저장 후 대시보드로 이동하며, 설정은 `~/.classroom-tv-lite/`에 보관됩니다.

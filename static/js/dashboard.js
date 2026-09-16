@@ -4,6 +4,7 @@ import {
   formatTime,
   getScheduleState,
 } from "./time.js";
+import { applyFontScales } from "./display.js";
 import { enableWakeLock } from "./wake-lock.js";
 
 const elements = {
@@ -86,6 +87,7 @@ async function loadDashboard(refresh = false) {
   }
   if (!response.ok) throw new Error("대시보드 설정을 불러오지 못했습니다.");
   const data = await response.json();
+  applyFontScales(data.display?.font_scales);
   elements.classroom.textContent = data.classroom_name || "교실";
   elements.notice.textContent = data.notice || "등록된 공지가 없습니다.";
   renderTimetable(data.timetable);

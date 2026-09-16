@@ -22,6 +22,8 @@ DEFAULT_SLOTS = [
     ]
 ]
 WEEKDAYS = ("월", "화", "수", "목", "금")
+FONT_SCALE_KEYS = ("clock", "status", "notice", "meal", "timetable")
+DEFAULT_FONT_SCALES = {key: 100 for key in FONT_SCALE_KEYS}
 DEFAULT_HELP_URL = (
     "https://app.notion.com/p/"
     "Classroom-TV-Lite-3dd54b03965e8047b272df3015806757?source=copy_link"
@@ -33,6 +35,7 @@ DEFAULT_SETTINGS: dict[str, Any] = {
     "notice": "",
     "help_url": DEFAULT_HELP_URL,
     "timetable_source": "neis",
+    "display": {"font_scales": DEFAULT_FONT_SCALES},
     "neis": {
         "api_key": "",
         "office_code": "",
@@ -74,6 +77,26 @@ def _clean_optional_url(value: Any) -> str:
     if parsed.scheme not in {"http", "https"} or not parsed.netloc:
         raise SettingsError("Notion 주소는 http:// 또는 https://로 시작해야 합니다.")
     return cleaned
+
+
+def _font_scales(payload: dict[str, Any]) -> dict[str, int]:
+    display = payload.get("display") or {}
+    if not isinstance(display, dict):
+        raise SettingsError("화면 설정 형식이 올바르지 않습니다.")
+    scales = display.get("font_scales") or {}
+    if not isinstance(scales, dict):
+        raise SettingsError("글씨 크기 설정 형식이 올바르지 않습니다.")
+
+    result: dict[str, int] = {}
+    for key in FONT_SCALE_KEYS:
+        try:
+            value = int(scales.get(key, 100))
+        except (TypeError, ValueError):
+            raise SettingsError("글씨 크기는 숫자로 입력하세요.") from None
+        if value < 75 or value > 150:
+            raise SettingsError("글씨 크기는 75%에서 150% 사이로 설정하세요.")
+        result[key] = value
+    return result
 
 
 def public_settings(settings: dict[str, Any]) -> dict[str, Any]:
@@ -170,6 +193,7 @@ def validate_settings(
         "notice": _clean_text(payload.get("notice"), 240),
         "help_url": _clean_optional_url(payload.get("help_url")),
         "timetable_source": source,
+        "display": {"font_scales": _font_scales(payload)},
         "neis": neis,
         "slots": slots,
         "week_subjects": week_subjects,

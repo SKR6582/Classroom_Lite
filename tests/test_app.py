@@ -79,10 +79,23 @@ class AppTests(unittest.TestCase):
             **DEFAULT_SETTINGS["week_subjects"],
             "수": ["국어"] * 7,
         }
+        payload["display"] = {
+            "font_scales": {
+                "clock": 125,
+                "status": 110,
+                "notice": 100,
+                "meal": 90,
+                "timetable": 115,
+            }
+        }
         self.client.post("/api/settings", json=payload)
         response = self.client.get("/api/timetable?date=2026-09-16")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.get_json()["entries"][0]["subject"], "국어")
+        dashboard = self.client.get("/api/dashboard?date=2026-09-16")
+        self.assertEqual(
+            dashboard.get_json()["display"]["font_scales"]["clock"], 125
+        )
 
     def test_notion_qr_is_disabled_without_help_url(self):
         payload = {**DEFAULT_SETTINGS, "help_url": ""}

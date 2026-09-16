@@ -23,6 +23,7 @@ function fillForm() {
   fillBasicSettings();
   fillNeisSettings();
   fillHelpSettings();
+  fillDisplaySettings();
 }
 
 function fillBasicSettings() {
@@ -50,6 +51,19 @@ function fillHelpSettings() {
     help.removeAttribute("href");
     help.hidden = true;
   }
+}
+
+function fillDisplaySettings() {
+  const scales = state.display?.font_scales || {};
+  document.querySelectorAll("[data-font-scale]").forEach((input) => {
+    const key = input.dataset.fontScale;
+    input.value = scales[key] ?? 100;
+    updateFontScaleOutput(key, input.value);
+  });
+}
+
+function updateFontScaleOutput(key, value) {
+  document.querySelector(`[data-font-scale-output="${key}"]`).textContent = `${value}%`;
 }
 
 function renderSlots() {
@@ -132,6 +146,18 @@ document.querySelector("#clear-override").addEventListener("click", () => {
   const date = document.querySelector("#override-date").value;
   delete state.date_overrides[date];
   renderOverride();
+});
+
+document.querySelectorAll("[data-font-scale]").forEach((input) => {
+  input.addEventListener("input", () => {
+    updateFontScaleOutput(input.dataset.fontScale, input.value);
+  });
+});
+document.querySelector("#reset-font-scales").addEventListener("click", () => {
+  document.querySelectorAll("[data-font-scale]").forEach((input) => {
+    input.value = "100";
+    updateFontScaleOutput(input.dataset.fontScale, input.value);
+  });
 });
 
 document.querySelector("#school-search").addEventListener("click", async () => {
@@ -226,6 +252,7 @@ form.addEventListener("submit", async (event) => {
   storeCurrentOverride();
   collectBasicSettings();
   collectNeisSettings();
+  collectDisplaySettings();
   await saveSettings();
 });
 
@@ -246,6 +273,13 @@ function collectNeisSettings() {
     grade: form.elements.grade.value,
     class_name: form.elements.class_name.value,
   };
+}
+
+function collectDisplaySettings() {
+  state.display = { font_scales: {} };
+  document.querySelectorAll("[data-font-scale]").forEach((input) => {
+    state.display.font_scales[input.dataset.fontScale] = Number(input.value);
+  });
 }
 
 async function saveSettings() {

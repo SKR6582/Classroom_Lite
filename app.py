@@ -152,6 +152,7 @@ def create_app(test_config: dict[str, Any] | None = None) -> Flask:
                 "classroom_name": settings["classroom_name"],
                 "notice": settings["notice"],
                 "help_url": settings["help_url"],
+                "display": settings["display"],
                 "timetable": timetable,
             }
         )
