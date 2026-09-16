@@ -1,7 +1,17 @@
 # Classroom TV Lite
 
-공기계 스마트폰에서 Termux로 직접 실행하고, 브라우저 화면을 교실 TV에
+Android 공기계에서 Termux로 직접 실행하고, 브라우저 화면을 교실 TV에
 16:9로 미러링하는 초경량 대시보드입니다.
+
+## 기기별 설치 가이드
+
+- [Android 설치 및 운영 가이드](docs/ANDROID_SETUP.md): Termux 설치, 첫 실행,
+  HDMI·무선 미러링, 장시간 운영과 업데이트
+- [iPhone·iPad 접속 및 TV 연결 가이드](docs/IOS_SETUP.md): 별도 서버 접속,
+  홈 화면 추가, AirPlay·HDMI 연결과 iOS 제약
+
+iOS와 iPadOS에서는 서버를 직접 실행하지 않고 Android, Mac, PC 또는 Raspberry Pi에서
+실행 중인 서버에 접속합니다.
 
 ## 포함 기능
 
