@@ -22,6 +22,16 @@ class AppTests(unittest.TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(response.location.endswith("/setup"))
 
+    def test_setup_page_links_to_neis_key_guide(self):
+        response = self.client.get("/setup")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("NEIS API 키가 아직 없나요?", response.text)
+        self.assertIn("암호 관리자", response.text)
+        self.assertIn(
+            "https://open.neis.go.kr/portal/guide/apiGuidePage.do",
+            response.text,
+        )
+
     def test_environment_neis_values_take_priority(self):
         with patch.dict(
             "os.environ",

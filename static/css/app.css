@@ -174,6 +174,20 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .form-card h2 { margin: 0; font-size: 20px; }
 .section-heading p { margin: 6px 0 0; color: var(--text-secondary); line-height: 1.5; font-size: 13px; }
+.setup-guide {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+  gap: 20px; margin-bottom: 20px; padding: 16px;
+  background: var(--surface-2); border: 1px solid var(--border-subtle); border-radius: 12px;
+}
+.setup-guide strong { color: var(--text-primary); font-size: 15px; }
+.setup-guide ol {
+  margin: 10px 0; padding-left: 20px;
+  color: var(--text-secondary); font-size: 13px; line-height: 1.7;
+}
+.setup-guide b { color: var(--text-primary); }
+.setup-guide small { color: var(--text-tertiary); line-height: 1.5; }
+.setup-guide-actions { display: grid; gap: 8px; }
+.setup-guide-actions .secondary-button { justify-content: center; white-space: nowrap; font-size: 13px; }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .form-grid .wide { grid-column: 1 / -1; }
 .form-grid.compact { margin-top: 18px; grid-template-columns: repeat(3, 1fr); }
@@ -220,6 +234,9 @@ button, .primary-button, .secondary-button {
   .form-grid .wide { grid-column: auto; }
   .settings-header { flex-direction: column; align-items: flex-start; }
   .header-actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+  .setup-guide { grid-template-columns: 1fr; }
+  .setup-guide-actions { grid-template-columns: 1fr 1fr; }
+  .setup-guide-actions .secondary-button { white-space: normal; text-align: center; }
   .section-heading-with-control { grid-template-columns: 34px minmax(0, 1fr); }
   .section-heading-with-control select { grid-column: 1 / -1; }
   .override-editor { grid-template-columns: 1fr 1fr; }
