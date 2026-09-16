@@ -21,10 +21,11 @@
             <strong id="classroom-name">교실</strong>
           </article>
 
-          <article class="panel status-panel">
+          <article id="status-panel" class="panel status-panel">
             <span class="card-label">현재 일과</span>
             <strong id="period-label">시간표 확인 중</strong>
-            <span id="countdown">--:--</span>
+            <span id="countdown">확인 중</span>
+            <small id="period-time"></small>
             <span id="wake-status" class="wake-status" hidden></span>
           </article>
 
@@ -40,7 +41,7 @@
         <article class="panel meal-panel">
           <div class="panel-heading">
             <h1 id="meal-title">오늘의 점심</h1>
-            <button id="meal-refresh" class="text-button" type="button">새로고침</button>
+            <button id="meal-refresh" class="icon-button" type="button" aria-label="급식 새로고침" title="급식 새로고침">↻</button>
           </div>
           <ul id="meal-list" class="meal-list">
             <li class="muted">급식을 불러오는 중입니다.</li>
@@ -51,9 +52,9 @@
         <article class="panel timetable-panel">
           <div class="panel-heading">
             <h1>시간표</h1>
-            <span>
+            <span class="timetable-actions">
               <span id="timetable-source" class="source-badge"></span>
-              <button id="timetable-refresh" class="text-button" type="button">새로고침</button>
+              <button id="timetable-refresh" class="icon-button" type="button" aria-label="시간표 새로고침" title="시간표 새로고침">↻</button>
             </span>
           </div>
           <ol id="timetable-list" class="timetable-list"></ol>

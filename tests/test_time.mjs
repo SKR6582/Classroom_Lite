@@ -4,7 +4,7 @@ import test from "node:test";
 
 const source = await readFile(new URL("../static/js/time.js", import.meta.url), "utf8");
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
-const { formatCountdown, getScheduleState } = await import(moduleUrl);
+const { formatCountdown, formatRemainingMinutes, getScheduleState } = await import(moduleUrl);
 
 const entries = [
   { label: "1교시", start: "08:45", end: "09:35" },
@@ -39,5 +39,17 @@ test("긴 공백은 점심시간으로 표시한다", () => {
 test("마지막 수업 후 종료 상태를 표시한다", () => {
   const state = getScheduleState(entries, at(13, 25));
   assert.equal(state.label, "오늘 수업 종료");
+  assert.equal(state.remaining, null);
+});
+
+test("잔여 시간은 시계 형식이 아닌 분 단위로 표시한다", () => {
+  assert.equal(formatRemainingMinutes(18 * 60 + 4), "19분 남음");
+  assert.equal(formatRemainingMinutes(42), "1분 미만 남음");
+});
+
+test("주말에는 교시를 활성화하지 않는다", () => {
+  const state = getScheduleState(entries, new Date(2026, 8, 20, 9, 0));
+  assert.equal(state.phase, "weekend");
+  assert.equal(state.activeIndex, -1);
   assert.equal(state.remaining, null);
 });

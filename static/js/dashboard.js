@@ -1,12 +1,19 @@
-import { formatCountdown, formatDate, formatTime, getScheduleState } from "./time.js";
+import {
+  formatDate,
+  formatRemainingMinutes,
+  formatTime,
+  getScheduleState,
+} from "./time.js";
 import { enableWakeLock } from "./wake-lock.js";
 
 const elements = {
   classroom: document.querySelector("#classroom-name"),
   date: document.querySelector("#current-date"),
   clock: document.querySelector("#clock"),
+  statusPanel: document.querySelector("#status-panel"),
   period: document.querySelector("#period-label"),
   countdown: document.querySelector("#countdown"),
+  periodTime: document.querySelector("#period-time"),
   timetable: document.querySelector("#timetable-list"),
   source: document.querySelector("#timetable-source"),
   mealTitle: document.querySelector("#meal-title"),
@@ -38,7 +45,10 @@ function renderTimetable(timetable) {
       item.innerHTML = `
         <span class="period-name"></span>
         <strong class="subject"></strong>
-        <span class="period-time"></span>
+        <span class="period-meta">
+          <span class="period-time"></span>
+          <strong class="row-remaining"></strong>
+        </span>
         <span class="progress"><span></span></span>`;
       item.querySelector(".period-name").textContent = entry.label;
       item.querySelector(".subject").textContent = entry.subject || "—";
@@ -84,11 +94,53 @@ async function loadMeal(refresh = false) {
         return item;
       }),
     );
-    elements.mealMessage.textContent = [data.warning, data.calories].filter(Boolean).join(" · ");
+    elements.mealMessage.textContent = data.warning || "";
   } catch (error) {
     elements.mealList.innerHTML = '<li class="muted">급식 정보를 불러오지 못했습니다.</li>';
     elements.mealMessage.textContent = error.message;
   }
+}
+
+function renderClock(now) {
+  elements.clock.textContent = formatTime(now);
+  elements.date.textContent = formatDate(now);
+}
+
+function renderScheduleStatus(state) {
+  elements.statusPanel.classList.toggle("is-active", state.phase === "class");
+  if (state.phase === "class") {
+    const entry = entries[state.activeIndex];
+    elements.period.textContent = `${entry.label} · ${entry.subject || "수업"}`;
+    elements.countdown.textContent = formatRemainingMinutes(state.remaining);
+    elements.periodTime.textContent = `${entry.start} – ${entry.end}`;
+    return;
+  }
+  elements.period.textContent = state.label;
+  if (state.phase === "finished") {
+    elements.countdown.textContent = "일과를 마쳤습니다";
+    elements.periodTime.textContent = "";
+    return;
+  }
+  if (state.phase === "weekend") {
+    elements.countdown.textContent = "편안한 주말 보내세요";
+    elements.periodTime.textContent = "";
+    return;
+  }
+  const next = entries[state.nextIndex];
+  const suffix = state.phase === "before" ? "후 시작" : "남음";
+  elements.countdown.textContent = formatRemainingMinutes(state.remaining, suffix);
+  elements.periodTime.textContent = next ? `다음 ${next.label} · ${next.start} 시작` : "";
+}
+
+function updateTimetableState(state) {
+  document.querySelectorAll(".timetable-item").forEach((item, index) => {
+    const active = index === state.activeIndex;
+    item.classList.toggle("active", active);
+    item.querySelector(".progress > span").style.width = active ? `${state.progress}%` : "0";
+    item.querySelector(".row-remaining").textContent = active
+      ? formatRemainingMinutes(state.remaining)
+      : "";
+  });
 }
 
 function tick() {
@@ -99,16 +151,10 @@ function tick() {
     loadDashboard().catch(console.error);
     loadMeal().catch(console.error);
   }
-  elements.clock.textContent = formatTime(now);
-  elements.date.textContent = formatDate(now);
+  renderClock(now);
   const state = getScheduleState(entries, now);
-  elements.period.textContent = state.label;
-  elements.countdown.textContent = formatCountdown(state.remaining);
-  document.querySelectorAll(".timetable-item").forEach((item, index) => {
-    const active = index === state.activeIndex;
-    item.classList.toggle("active", active);
-    item.querySelector(".progress > span").style.width = active ? `${state.progress}%` : "0";
-  });
+  renderScheduleStatus(state);
+  updateTimetableState(state);
 }
 
 document.querySelector("#meal-refresh").addEventListener("click", () => loadMeal(true));
