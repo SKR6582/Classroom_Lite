@@ -84,11 +84,17 @@ def _manual_subjects(settings: dict[str, Any], target: date) -> list[str]:
 def _combine_slots(
     slots: list[dict[str, str]], subjects: list[str], source: str
 ) -> dict[str, Any]:
+    def display_subject(value: Any) -> str:
+        subject = str(value or "").strip()
+        return "선택" if subject in {"--", "—", "–"} else subject
+
     return {
         "entries": [
             {
                 **slot,
-                "subject": subjects[index] if index < len(subjects) else "",
+                "subject": display_subject(
+                    subjects[index] if index < len(subjects) else ""
+                ),
             }
             for index, slot in enumerate(slots)
         ],

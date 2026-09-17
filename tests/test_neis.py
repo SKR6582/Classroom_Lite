@@ -86,6 +86,20 @@ class NeisTests(unittest.TestCase):
             self.assertEqual(result["entries"][0]["subject"], "수학")
 
     @patch("classroom_lite.neis._fetch")
+    def test_timetable_displays_elective_marker_as_selection(self, fetch):
+        fetch.return_value = {
+            "hisTimetable": [
+                {},
+                {"row": [{"PERIO": "1", "ITRT_CNTNT": "--"}]},
+            ]
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            result = get_timetable(
+                settings(), Path(directory), date(2026, 9, 16)
+            )
+        self.assertEqual(result["entries"][0]["subject"], "선택")
+
+    @patch("classroom_lite.neis._fetch")
     def test_school_search_maps_codes(self, fetch):
         fetch.return_value = {
             "schoolInfo": [
