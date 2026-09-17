@@ -84,9 +84,20 @@ def _manual_subjects(settings: dict[str, Any], target: date) -> list[str]:
 def _combine_slots(
     slots: list[dict[str, str]], subjects: list[str], source: str
 ) -> dict[str, Any]:
-    def display_subject(value: Any) -> str:
+    last_neis_subject = max(
+        (
+            index
+            for index, value in enumerate(subjects)
+            if str(value or "").strip()
+        ),
+        default=-1,
+    )
+
+    def display_subject(value: Any, index: int) -> str:
         subject = str(value or "").strip()
-        if subject in {"--", "—", "–"} or (source == "neis" and not subject):
+        if subject in {"--", "—", "–"}:
+            return "선택"
+        if source == "neis" and not subject and index < last_neis_subject:
             return "선택"
         return subject
 
@@ -95,7 +106,8 @@ def _combine_slots(
             {
                 **slot,
                 "subject": display_subject(
-                    subjects[index] if index < len(subjects) else ""
+                    subjects[index] if index < len(subjects) else "",
+                    index,
                 ),
             }
             for index, slot in enumerate(slots)

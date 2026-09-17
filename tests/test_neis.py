@@ -90,7 +90,12 @@ class NeisTests(unittest.TestCase):
         fetch.return_value = {
             "hisTimetable": [
                 {},
-                {"row": [{"PERIO": "1", "ITRT_CNTNT": "--"}]},
+                {
+                    "row": [
+                        {"PERIO": "1", "ITRT_CNTNT": "--"},
+                        {"PERIO": "3", "ITRT_CNTNT": "미적분Ⅰ"},
+                    ]
+                },
             ]
         }
         with tempfile.TemporaryDirectory() as directory:
@@ -99,6 +104,8 @@ class NeisTests(unittest.TestCase):
             )
         self.assertEqual(result["entries"][0]["subject"], "선택")
         self.assertEqual(result["entries"][1]["subject"], "선택")
+        self.assertEqual(result["entries"][2]["subject"], "미적분Ⅰ")
+        self.assertEqual(result["entries"][3]["subject"], "")
 
     @patch("classroom_lite.neis._fetch")
     def test_school_search_maps_codes(self, fetch):
