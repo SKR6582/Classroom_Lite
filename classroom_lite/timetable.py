@@ -86,7 +86,9 @@ def _combine_slots(
 ) -> dict[str, Any]:
     def display_subject(value: Any) -> str:
         subject = str(value or "").strip()
-        return "선택" if subject in {"--", "—", "–"} else subject
+        if subject in {"--", "—", "–"} or (source == "neis" and not subject):
+            return "선택"
+        return subject
 
     return {
         "entries": [
