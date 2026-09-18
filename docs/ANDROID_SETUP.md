@@ -19,29 +19,59 @@ Google Play의 Termux는 공식 권장판보다 기능 차이와 제약이 있�
 
 ## 2. Termux에 설치하기
 
-Termux를 열고 아래 명령을 한 줄씩 실행합니다.
+Termux를 열고 아래 명령을 **한 줄씩** 복사해 붙여넣은 뒤 엔터를 누릅니다.
+한 번에 여러 줄을 붙여넣으면 Termux에서 실패하기 쉬우니, 반드시 한 줄만 실행하세요.
+중간에 계속 진행할지 묻는 화면이 나오면 `Y`를 입력합니다.
 
 ```bash
 pkg update
+```
+
+```bash
 pkg upgrade
+```
+
+```bash
 pkg install git python termux-api
+```
+
+```bash
 git clone --branch stable --single-branch https://github.com/SKR6582/Classroom_TV_Lite.git
+```
+
+```bash
 cd Classroom_TV_Lite
+```
+
+```bash
 python -m venv .venv
+```
+
+```bash
 source .venv/bin/activate
+```
+
+```bash
 pip install -r requirements.txt
 ```
 
-중간에 계속 진행할지 묻는 화면이 나오면 `Y`를 입력합니다.
-
 ## 3. 서버 실행하기
 
-다음 명령을 실행합니다.
+아래 명령도 **한 줄씩** 실행합니다.
 
 ```bash
 cd ~/Classroom_TV_Lite
+```
+
+```bash
 source .venv/bin/activate
+```
+
+```bash
 termux-wake-lock
+```
+
+```bash
 python app.py
 ```
 
@@ -113,11 +143,25 @@ Smart View, 화면 공유, Cast 등 기기에서 제공하는 기능을 사용�
 중단됩니다. 자동 업데이트를 사용할 수 없을 때만 서버를 `Ctrl+C`로 종료하고 다음
 명령으로 stable 브랜치를 직접 갱신합니다.
 
+아래 명령도 **한 줄씩** 실행합니다.
+
 ```bash
 cd ~/Classroom_TV_Lite
+```
+
+```bash
 git pull --ff-only origin stable
+```
+
+```bash
 source .venv/bin/activate
+```
+
+```bash
 pip install -r requirements.txt
+```
+
+```bash
 python app.py
 ```
 

@@ -40,17 +40,48 @@ iOS와 iPadOS에서는 서버를 직접 실행하지 않고 Android, Mac, PC 또
 
 ## Termux 설치와 실행
 
-F-Droid 또는 공식 GitHub에서 Termux를 설치한 뒤 아래 명령을 실행합니다.
+F-Droid 또는 공식 GitHub에서 Termux를 설치한 뒤, 아래 명령을 **한 줄씩** 복사해
+붙여넣고 엔터를 누릅니다. 한 번에 여러 줄을 붙여넣지 마세요. 중간에 확인을
+물으면 `Y`를 입력합니다. 자세한 절차는
+[Android 설치 가이드](docs/ANDROID_SETUP.md)를 참고하세요.
 
 ```bash
 pkg update
+```
+
+```bash
+pkg upgrade
+```
+
+```bash
 pkg install git python termux-api
+```
+
+```bash
 git clone --branch stable --single-branch https://github.com/SKR6582/Classroom_TV_Lite.git
+```
+
+```bash
 cd Classroom_TV_Lite
+```
+
+```bash
 python -m venv .venv
+```
+
+```bash
 source .venv/bin/activate
+```
+
+```bash
 pip install -r requirements.txt
+```
+
+```bash
 termux-wake-lock
+```
+
+```bash
 python app.py
 ```
 
