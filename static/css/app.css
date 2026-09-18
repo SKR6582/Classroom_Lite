@@ -265,8 +265,19 @@ button, .primary-button, .secondary-button {
 .update-panel strong { color: var(--text-primary); }
 .update-panel p { margin: 6px 0; color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
 .update-panel small { color: var(--text-tertiary); font-variant-numeric: tabular-nums; }
-.update-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.update-actions {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+}
+.update-actions .update-buttons { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .update-actions button { justify-content: center; white-space: nowrap; }
+.update-note {
+  margin: 0; max-width: 280px; text-align: right;
+  color: var(--text-tertiary); font-size: 12px; line-height: 1.45;
+}
+.update-note code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95em;
+}
 .override-editor { margin: 12px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 .form-message { min-height: 24px; color: var(--text-secondary); }
 .form-message.success { color: var(--text-primary); }
@@ -295,8 +306,10 @@ button, .primary-button, .secondary-button {
   .font-scale-row output { grid-column: 2; grid-row: 1; }
   .font-scale-row input[type="range"] { grid-column: 1 / -1; grid-row: 2; }
   .update-panel { align-items: stretch; flex-direction: column; }
-  .update-actions { justify-content: stretch; }
+  .update-actions { align-items: stretch; }
+  .update-buttons { justify-content: stretch; }
   .update-actions button { flex: 1; }
+  .update-note { max-width: none; text-align: left; }
   .section-heading-with-control { grid-template-columns: 34px minmax(0, 1fr); }
   .section-heading-with-control select { grid-column: 1 / -1; }
   .override-editor { grid-template-columns: 1fr 1fr; }

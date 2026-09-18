@@ -58,6 +58,7 @@ class AppTests(unittest.TestCase):
             response.text,
         )
         self.assertIn('id="notice-input"', response.text)
+        self.assertIn("서버가 자동으로 다시 시작됩니다", response.text)
         self.assertNotIn("Notion 상세 가이드 주소", response.text)
 
     def test_environment_neis_values_take_priority(self):
